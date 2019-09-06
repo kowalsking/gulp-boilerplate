@@ -85,17 +85,17 @@ task('js', series('jsLibs', () => (
 
 task('media', () => (
 	src([
-			`!${SOURCE_RELATIVE_PATH}/assets/i/**/*.*`,
+			`!${SOURCE_RELATIVE_PATH}/assets/images/**/*.*`,
 			`${SOURCE_RELATIVE_PATH}/assets/**/*.*`
 		])
 		.pipe(dest(`${DIST_RELATIVE_PATH}/assets/`))
 ));
 
-task('img', () => (
-	src(`${SOURCE_RELATIVE_PATH}/assets/i/**/*.*`)
-    .pipe(changed(`${DIST_RELATIVE_PATH}/assets/i/`))
+task('images', () => (
+	src(`${SOURCE_RELATIVE_PATH}/assets/images/**/*.*`)
+    .pipe(changed(`${DIST_RELATIVE_PATH}/assets/images/`))
 		.pipe(PRODUCTION ? minifyImage() : gutil.noop())
-		.pipe(dest(`${DIST_RELATIVE_PATH}/assets/i/`))
+		.pipe(dest(`${DIST_RELATIVE_PATH}/assets/images/`))
 ));
 
 task('browserSync', () => (
@@ -131,7 +131,7 @@ task('default', parallel(
 	'sass',
 	'js',
 	'media',
-	'img',
+	'images',
 	'browserSync',
 	'watch'
 ));
