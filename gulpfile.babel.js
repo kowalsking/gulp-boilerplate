@@ -13,7 +13,7 @@ import gutil from 'gulp-util';
 import changed from 'gulp-changed';
 
 const SOURCE_RELATIVE_PATH = './src';
-const DIST_RELATIVE_PATH = './public';
+const DIST_RELATIVE_PATH = './dist';
 const SASS_EXTENSION = 'scss';
 const browserSync = bs.create();
 const PORT = gutil.env.p || 8080;
@@ -116,11 +116,13 @@ function reloadBrowsers(done) {
 	done();
 }
 
+// TODO: Watch any media file changes, not just images
 task('watch', (done) => {
 	watch(`${SOURCE_RELATIVE_PATH}/*.html`, series('html', reloadBrowsers));
 	watch(`${SOURCE_RELATIVE_PATH}/styles/**/*.css`, series('css'));
 	watch(`${SOURCE_RELATIVE_PATH}/styles/**/*.${SASS_EXTENSION}`, series('sass'));
 	watch(`${SOURCE_RELATIVE_PATH}/scripts/**/*.js`, series('js'));
+	watch(`${SOURCE_RELATIVE_PATH}/assets/images/**/*.*`, series('images'));
 
 	done();
 });
