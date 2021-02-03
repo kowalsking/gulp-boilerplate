@@ -5,7 +5,8 @@
   "author": "Alexandr Kolesnikov",
   "license": "ISC",
   "scripts": {
-    "start": "gulp"
+    "start": "npm run clear && gulp",
+    "clear": "rimraf dist"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
@@ -42,6 +43,7 @@
     "gulp-rigger": "^0.5.8",
     "gulp-sass": "^4.0.2",
     "gulp-util": "^3.0.8",
-    "node-notifier": "^5.4.3"
+    "node-notifier": "^5.4.3",
+    "rimraf": "^2.7.1"
   }
 }
