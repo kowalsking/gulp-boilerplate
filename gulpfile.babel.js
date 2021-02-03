@@ -43,7 +43,11 @@ task('sass', () => (
 			`${SOURCE_RELATIVE_PATH}/styles/**/*.${SASS_EXTENSION}`
 		])
     .pipe(changed(`${DIST_RELATIVE_PATH}/styles/`, { extension: `.${SASS_EXTENSION}` }))
-		.pipe(plumber({errorHandler: notify.onError('Error: <%= error.message %>')}))
+		.pipe(plumber({errorHandler: (error) => {
+				notify.onError('Error: <%= error.message %>');
+				browserSync.notify(error.message, 30000);
+			}
+		}))
 		.pipe(sass())
 		.pipe(autoprefixer('> 1%', 'last 5 versions', 'Firefox < 20', 'ie 8', 'ie 9'))
 		.pipe(PRODUCTION ? cleanCSS({compatibility: 'ie8'}) : gutil.noop())
