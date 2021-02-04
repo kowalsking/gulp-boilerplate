@@ -18,6 +18,9 @@ const SASS_EXTENSION = 'scss';
 const browserSync = bs.create();
 const PORT = gutil.env.p || 8080;
 const PRODUCTION = gutil.env.production;
+const ERROR_SHOW_TIMEOUT = 30000;
+
+// TODO: Cleanup formatting
 
 task('html', () => (
 	src(`${SOURCE_RELATIVE_PATH}/*.html`)
@@ -36,16 +39,18 @@ task('css', () => (
 		.pipe(browserSync.stream())
 ));
 
-task('sass', () => (
+task('sass', (done) => (
 	src([
-			`!${SOURCE_RELATIVE_PATH}/styles/fonts.${SASS_EXTENSION}`,
-			`!${SOURCE_RELATIVE_PATH}/styles/mixins.${SASS_EXTENSION}`,
-			`${SOURCE_RELATIVE_PATH}/styles/**/*.${SASS_EXTENSION}`
-		])
+		`!${SOURCE_RELATIVE_PATH}/styles/fonts.${SASS_EXTENSION}`,
+		`!${SOURCE_RELATIVE_PATH}/styles/mixins.${SASS_EXTENSION}`,
+		`${SOURCE_RELATIVE_PATH}/styles/**/*.${SASS_EXTENSION}`
+	])
     .pipe(changed(`${DIST_RELATIVE_PATH}/styles/`, { extension: `.${SASS_EXTENSION}` }))
-		.pipe(plumber({errorHandler: (error) => {
-				notify.onError('Error: <%= error.message %>');
-				browserSync.notify(error.message, 30000);
+		.pipe(plumber({
+			errorHandler: (error) => {
+				notify.onError('Error: <%= error.message %>')(error);
+				browserSync.notify(error.message, ERROR_SHOW_TIMEOUT);
+				done();
 			}
 		}))
 		.pipe(sass())
@@ -120,13 +125,14 @@ function reloadBrowsers(done) {
 	done();
 }
 
-// TODO: Watch any media file changes, not just images
+// TODO: Exclude images in "media" watcher
 task('watch', (done) => {
 	watch(`${SOURCE_RELATIVE_PATH}/*.html`, series('html', reloadBrowsers));
 	watch(`${SOURCE_RELATIVE_PATH}/styles/**/*.css`, series('css'));
 	watch(`${SOURCE_RELATIVE_PATH}/styles/**/*.${SASS_EXTENSION}`, series('sass'));
-	watch(`${SOURCE_RELATIVE_PATH}/scripts/**/*.js`, series('js'));
-	watch(`${SOURCE_RELATIVE_PATH}/assets/images/**/*.*`, series('images'));
+	watch(`${SOURCE_RELATIVE_PATH}/scripts/**/*.js`, series('js', reloadBrowsers));
+	watch(`${SOURCE_RELATIVE_PATH}/assets/images/**/*.*`, series('images', reloadBrowsers));
+	watch(`${SOURCE_RELATIVE_PATH}/assets/**/*.*`, series('media', reloadBrowsers));
 
 	done();
 });
