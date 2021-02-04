@@ -22,7 +22,7 @@ npm install
 * `cd <YOUR_PROJECT_DIR_PATH>` - helps to open your Project directory using terminal
 * `npm install` - installs all required for the Project dependencies
 ### Quick Development Start
- * `npm start` - Happy hacking, now you can develop your site :)
+ * `npm start` - Happy hacking at the, now you can develop your amazing site and see the result at the http://localhost:8080 :)
  
 ### Quick Production Start
- * `npm run build` - Happy deploying, now you have dist directory in your Project folder
+ * `npm run build` - Happy deploying, now you have dist directory which is optimized for production
